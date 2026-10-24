@@ -1,0 +1,307 @@
+/* ── Shama Cart ── */
+.sc-nav-btn {
+  position: relative; display: inline-flex; align-items: center; justify-content: center;
+  width: 40px; height: 40px; border-radius: 50%;
+  border: 1px solid var(--line, #F0DCE1); background: rgba(255,255,255,.85);
+  color: var(--ink, #3A3A3A); cursor: pointer; padding: 0;
+  transition: background .2s ease, color .2s ease, transform .2s ease;
+}
+.sc-nav-btn:hover { background: var(--rose, #BA787A); color: #fff; }
+.sc-nav-btn svg { width: 20px; height: 20px; }
+.sc-nav-btn.bump { animation: scBump .5s ease; }
+@keyframes scBump { 0%{transform:scale(1)} 35%{transform:scale(1.28)} 100%{transform:scale(1)} }
+.sc-badge {
+  position: absolute; top: -4px; inset-inline-end: -4px;
+  min-width: 18px; height: 18px; padding: 0 5px; border-radius: 9px;
+  background: var(--rose, #BA787A); color: #fff; border: 2px solid #fff;
+  font: 600 10.5px/14px 'Poppins', sans-serif; text-align: center; display: none;
+}
+.sc-badge.show { display: block; }
+
+/* modal additions */
+.sc-add-btn {
+  width: 100%; margin-top: 18px; padding: 14px; border: none; border-radius: 12px; cursor: pointer;
+  background: linear-gradient(135deg, var(--rose, #BA787A), #8E5B5C); color: #fff;
+  font: 600 14.5px 'El Messiri', 'Poppins', sans-serif; letter-spacing: .02em;
+  box-shadow: 0 8px 20px rgba(186,120,122,.28);
+  transition: transform .2s ease, box-shadow .2s ease;
+}
+.sc-add-btn:hover { transform: translateY(-2px); box-shadow: 0 12px 26px rgba(186,120,122,.36); }
+.sc-modal-ship {
+  margin-top: 12px; text-align: center; font-size: 12.5px; color: #8a5a66;
+  background: rgba(186,120,122,.07); border: 1px dashed rgba(186,120,122,.4);
+  border-radius: 10px; padding: 8px 10px;
+}
+.sc-price-tag {
+  font: 600 15px 'Poppins', sans-serif; color: var(--rose, #BA787A); margin-top: 10px;
+}
+
+/* overlay + drawer */
+.sc-overlay {
+  position: fixed; inset: 0; z-index: 1100; background: rgba(58,42,46,.5);
+  opacity: 0; pointer-events: none; transition: opacity .3s ease;
+}
+.sc-overlay.open { opacity: 1; pointer-events: auto; }
+.sc-drawer {
+  position: fixed; top: 0; bottom: 0; z-index: 1101; width: min(420px, 100vw);
+  background: var(--cream, #FBF1EE); display: flex; flex-direction: column;
+  right: 0; transform: translateX(105%); transition: transform .38s cubic-bezier(.2,.8,.3,1);
+  box-shadow: -18px 0 50px rgba(58,32,38,.25);
+  font-family: 'El Messiri', 'Poppins', sans-serif; color: var(--ink, #3A3A3A);
+}
+[dir="rtl"] .sc-drawer { right: auto; left: 0; transform: translateX(-105%); box-shadow: 18px 0 50px rgba(58,32,38,.25); }
+.sc-drawer.open, [dir="rtl"] .sc-drawer.open { transform: translateX(0); }
+.sc-head {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 18px 20px; border-bottom: 1px solid var(--line, #F0DCE1); background: #fff;
+}
+.sc-head h3 { margin: 0; font: 500 21px 'Aref Ruqaa', 'Playfair Display', serif; }
+.sc-x { width: 34px; height: 34px; border-radius: 50%; border: none; background: #f6e9ec; cursor: pointer; font-size: 15px; }
+.sc-ship-bar {
+  background: linear-gradient(135deg, var(--rose, #BA787A), #8E5B5C 55%, var(--rose, #BA787A));
+  color: #fff; text-align: center; padding: 10px 14px;
+  font: 500 14px 'Aref Ruqaa', 'El Messiri', serif; letter-spacing: .04em;
+  position: relative; overflow: hidden;
+}
+.sc-ship-bar::after {
+  content: ""; position: absolute; top: 0; bottom: 0; width: 40%; inset-inline-start: -60%;
+  background: linear-gradient(100deg, transparent, rgba(255,255,255,.4), transparent);
+  animation: scShine 3.4s ease-in-out infinite;
+}
+@keyframes scShine { 0%,55%{inset-inline-start:-60%} 85%,100%{inset-inline-start:120%} }
+.sc-body { flex: 1; overflow-y: auto; padding: 16px 18px; }
+.sc-empty { text-align: center; padding: 60px 20px; color: #8a7378; }
+.sc-empty .big { font-size: 46px; margin-bottom: 10px; }
+.sc-empty a {
+  display: inline-block; margin-top: 16px; background: var(--rose, #BA787A); color: #fff;
+  padding: 11px 26px; border-radius: 30px; text-decoration: none; font-size: 13.5px;
+}
+.sc-item {
+  display: flex; gap: 12px; background: #fff; border: 1px solid var(--line, #F0DCE1);
+  border-radius: 14px; padding: 10px; margin-bottom: 12px;
+}
+.sc-item img { width: 70px; height: 84px; border-radius: 9px; object-fit: cover; background: #f7ebe7; flex-shrink: 0; }
+.sc-item .ph { width: 70px; height: 84px; border-radius: 9px; background: #f7ebe7; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 26px; }
+.sc-info { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+.sc-name { font-weight: 700; font-size: 14px; line-height: 1.4; }
+.sc-color { font-size: 12px; color: #9a7d84; margin-top: 2px; }
+.sc-row { display: flex; align-items: center; justify-content: space-between; margin-top: auto; padding-top: 6px; }
+.sc-qty { display: inline-flex; align-items: center; border: 1px solid var(--line, #F0DCE1); border-radius: 20px; overflow: hidden; }
+.sc-qty button { width: 28px; height: 28px; border: none; background: #fff; cursor: pointer; font-size: 16px; color: var(--rose, #BA787A); }
+.sc-qty button:hover { background: #fbeaf0; }
+.sc-qty span { min-width: 24px; text-align: center; font: 600 13px 'Poppins', sans-serif; }
+.sc-line-price { font: 600 13.5px 'Poppins', sans-serif; color: var(--rose, #BA787A); }
+.sc-rm { border: none; background: none; cursor: pointer; color: #b99aa2; font-size: 12px; text-decoration: underline; padding: 0; align-self: flex-start; }
+.sc-foot { border-top: 1px solid var(--line, #F0DCE1); background: #fff; padding: 14px 20px 18px; }
+.sc-sum { display: flex; justify-content: space-between; font-size: 13.5px; padding: 3px 0; color: #6b5459; }
+.sc-sum.total { font-size: 16px; font-weight: 700; color: var(--ink, #3A3A3A); border-top: 1px solid var(--line, #F0DCE1); margin-top: 6px; padding-top: 10px; }
+.sc-sum .free { color: #1f9d55; font-weight: 700; }
+.sc-btn {
+  width: 100%; margin-top: 12px; padding: 14px; border: none; border-radius: 14px; cursor: pointer;
+  font: 600 14.5px 'El Messiri', 'Poppins', sans-serif; color: #fff;
+  background: linear-gradient(135deg, var(--rose, #BA787A), #8E5B5C);
+}
+.sc-btn.wa { background: #8E5B5C; }
+.sc-btn.ghost { background: transparent; color: #8a5a66; border: 1px solid var(--line, #F0DCE1); margin-top: 8px; }
+
+/* checkout form */
+.sc-form label { display: block; font-size: 13px; font-weight: 700; margin: 14px 0 6px; }
+.sc-form input, .sc-form textarea {
+  width: 100%; padding: 12px 14px; border: 1.5px solid var(--line, #F0DCE1); border-radius: 12px;
+  font: 400 14.5px 'El Messiri', 'Poppins', sans-serif; background: #fff; color: var(--ink, #3A3A3A);
+}
+.sc-form textarea { min-height: 92px; resize: vertical; }
+.sc-form input:focus, .sc-form textarea:focus { outline: none; border-color: var(--rose, #BA787A); }
+.sc-form .err { border-color: #d64545; }
+.sc-err-msg { color: #d64545; font-size: 12px; margin-top: 4px; display: none; }
+.sc-err-msg.show { display: block; }
+.sc-loc {
+  margin-top: 8px; border: 1px dashed var(--gold, #C9A27A); background: #fff; border-radius: 10px;
+  padding: 8px 12px; font-size: 12.5px; cursor: pointer; color: #6b5459;
+}
+.sc-loc.ok { border-color: #1f9d55; color: #1f9d55; }
+.sc-mini { background: #fff; border: 1px solid var(--line, #F0DCE1); border-radius: 12px; padding: 10px 14px; margin-top: 16px; font-size: 13px; }
+.sc-thanks { text-align: center; padding: 70px 24px; }
+.sc-thanks .big { font-size: 52px; }
+
+.sc-toast {
+  position: fixed; left: 50%; bottom: 28px; z-index: 1200; transform: translate(-50%, 30px);
+  background: #3A2A2E; color: #fff; padding: 12px 22px; border-radius: 30px; font-size: 13.5px;
+  opacity: 0; pointer-events: none; transition: all .35s ease; font-family: 'El Messiri', 'Poppins', sans-serif;
+}
+.sc-toast.show { opacity: 1; transform: translate(-50%, 0); }
+
+.sc-card-price { font: 600 14px 'Poppins', sans-serif; color: var(--rose, #BA787A); margin-top: 10px; }
+
+/* ── details gate (required before first add) ── */
+.sc-gate-overlay {
+  position: fixed; inset: 0; z-index: 1250; background: rgba(58,42,46,.55);
+  display: flex; align-items: center; justify-content: center; padding: 14px;
+  opacity: 0; pointer-events: none; transition: opacity .25s ease;
+}
+.sc-gate-overlay.open { opacity: 1; pointer-events: auto; }
+.sc-gate {
+  position: relative; width: min(540px, 100%); max-height: 94vh; overflow-y: auto;
+  background: var(--cream, #FBF1EE); border-radius: 20px; padding: 24px 22px 22px;
+  box-shadow: 0 24px 60px rgba(58,32,38,.35);
+  font-family: 'El Messiri', 'Poppins', sans-serif; color: var(--ink, #3A3A3A);
+}
+.sc-gate h3 { margin: 0 0 6px; font: 500 24px 'Aref Ruqaa', 'Playfair Display', serif; padding-inline-end: 40px; }
+.sc-gate-sub { margin: 0 0 4px; font-size: 13px; color: #7a6469; line-height: 1.8; }
+.sc-gate .sc-x { position: absolute; top: 14px; inset-inline-end: 14px; }
+.sc-grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 0 12px; }
+.sc-grid2 .sc-full { grid-column: 1 / -1; }
+.sc-gate .sc-btn { margin-top: 16px; }
+.sc-gate label { margin: 12px 0 5px; }
+.sc-info-box { background: #fff; border: 1px solid var(--line, #F0DCE1); border-radius: 14px; padding: 12px 14px; }
+.sc-info-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; font-size: 14px; }
+.sc-edit { border: none; background: none; cursor: pointer; font-size: 12.5px; color: var(--rose, #BA787A); text-decoration: underline; padding: 0; }
+.sc-info-row { font-size: 13.5px; line-height: 1.9; color: #5d474c; }
+@media (max-width: 420px) { .sc-grid2 { grid-template-columns: 1fr; } }
+
+.sc-card-base { font: 400 12px 'El Messiri', 'Poppins', sans-serif; color: #9a8085; margin-inline-start: 10px; }
+.sc-base-tag { font-weight: 500; color: #8a7378; margin-top: -4px; }
+
+/* ── card slider ── */
+.card-media { position: relative; }
+.cs-arrow { position:absolute; top:50%; transform:translateY(-50%); width:30px; height:30px; border-radius:50%; border:none; background:rgba(255,255,255,.9); color:#6b4344; cursor:pointer; opacity:0; transition:opacity .2s ease; z-index:4; display:flex; align-items:center; justify-content:center; font-size:19px; line-height:1; padding:0; box-shadow:0 3px 8px rgba(58,32,38,.18); }
+.cs-arrow.prev { inset-inline-start:8px; } .cs-arrow.next { inset-inline-end:8px; }
+.card:hover .cs-arrow { opacity:1; }
+@media (hover:none) { .cs-arrow { opacity:1; } }
+.cs-dots { position:absolute; bottom:9px; left:0; right:0; display:flex; justify-content:center; gap:5px; z-index:4; pointer-events:none; }
+.cs-dot { width:6px; height:6px; border-radius:50%; background:rgba(255,255,255,.75); box-shadow:0 0 0 1px rgba(90,52,52,.18); }
+.cs-dot.active { background:var(--rose, #BA787A); }
+/* ── contact dialog ── */
+.sc-contact-ov { position:fixed; inset:0; z-index:1300; background:rgba(58,42,46,.58); display:flex; align-items:center; justify-content:center; padding:16px; opacity:0; pointer-events:none; transition:opacity .25s ease; }
+.sc-contact-ov.open { opacity:1; pointer-events:auto; }
+.sc-contact { position:relative; width:min(430px,100%); background:linear-gradient(160deg,#fffaf8,#f8e9e5); border-radius:24px; padding:30px 24px 24px; text-align:center; box-shadow:0 26px 60px rgba(58,32,38,.35); font-family:'El Messiri','Poppins',sans-serif; color:var(--ink,#3A3A3A); }
+.sc-contact .sc-x { position:absolute; top:14px; inset-inline-end:14px; }
+.ct-swan { font-size:34px; line-height:1; }
+.sc-contact h3 { margin:6px 0 4px; font:500 28px 'Aref Ruqaa','Playfair Display',serif; color:#6b4344; }
+.ct-sub { margin:0 0 18px; font-size:14px; color:#8a7378; }
+.ct-row { display:flex; align-items:center; gap:14px; text-decoration:none; color:inherit; background:#fff; border:1px solid #ecd0cb; border-radius:16px; padding:13px 14px; margin-top:10px; text-align:start; transition:transform .2s ease, box-shadow .2s ease; }
+.ct-row:hover { transform:translateY(-3px); box-shadow:0 12px 26px rgba(90,52,52,.16); }
+.ct-ico { width:44px; height:44px; flex:0 0 44px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:20px; color:#fff; background:linear-gradient(135deg,#c9a27a,#8e5b5c); }
+.ct-txt { flex:1; display:flex; flex-direction:column; gap:2px; min-width:0; }
+.ct-txt b { font-size:15px; } .ct-txt em { font-style:normal; font-size:13.5px; color:#8a7378; font-family:'Poppins',sans-serif; }
+.ct-go { font-size:12.5px; padding:8px 14px; border-radius:30px; background:#8e5b5c; color:#fff; white-space:nowrap; }
+
+/* product window: only "add to cart" (no WhatsApp / Instagram buttons) */
+.overlay .modal .actions { display: none !important; }
+.ct-row { cursor: default; } .ct-row:hover { transform: none; box-shadow: none; }
+.ct-btns { display:flex; flex-direction:column; gap:6px; align-items:stretch; }
+.ct-go { text-decoration:none; text-align:center; }
+.ct-copy { border:1px solid #d9bfb8; background:#fff; color:#8e5b5c; border-radius:30px; padding:6px 14px; font:500 12px 'El Messiri','Poppins',sans-serif; cursor:pointer; }
+.ct-copy:hover { background:#fbf1ee; }
+
+/* gift wrap */
+.sc-gift { display:flex; align-items:center; gap:10px; margin-top:16px; padding:12px 14px; border:1.5px dashed #c9a27a; border-radius:14px; background:#fffaf6; cursor:pointer; font:600 14px 'El Messiri','Poppins',sans-serif; color:#6b4344; }
+.sc-gift input { position:absolute; opacity:0; pointer-events:none; }
+.sc-gift-box { width:22px; height:22px; flex:0 0 22px; border-radius:7px; border:2px solid #c9a27a; background:#fff; position:relative; transition:all .2s; }
+.sc-gift input:checked + .sc-gift-box { background:#8e5b5c; border-color:#8e5b5c; }
+.sc-gift input:checked + .sc-gift-box::after { content:"✓"; position:absolute; inset:0; color:#fff; font-size:15px; line-height:18px; text-align:center; }
+.sc-gift:has(input:checked) { border-style:solid; background:#fbeee6; }
+.sc-gift-txt em { font-style:normal; font-weight:400; font-size:12.5px; color:#9a7d84; }
+.sc-giftline { display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-top:4px; }
+.sc-giftchip { font-size:11.5px; background:#fbeee6; color:#8e5b5c; border:1px solid #ecd0cb; border-radius:20px; padding:2px 10px; }
+.sc-giftbtn { border:none; background:none; padding:0; font-size:11.5px; color:#8e5b5c; text-decoration:underline; cursor:pointer; font-family:inherit; }
+
+/* contact window: two clean tappable options */
+a.ct-row { cursor: pointer; text-decoration: none; color: inherit; }
+a.ct-row:hover { transform: translateY(-2px); box-shadow: 0 12px 26px rgba(90,52,52,.16); }
+.ct-ico.wa { background: linear-gradient(135deg,#25D366,#128C7E); }
+.ct-ico.ig { background: linear-gradient(135deg,#f58529,#dd2a7b 55%,#8134af); }
+.ct-arrow { margin-inline-start: auto; font-size: 26px; line-height: 1; color: #b08a76; }
+[dir="ltr"] .ct-arrow { transform: scaleX(-1); }
+
+.sc-msgbox { width:100%; min-height:150px; border:1px solid #ecd0cb; border-radius:12px; padding:10px; font:13px/1.8 'El Messiri',sans-serif; background:#fffaf8; color:#5d474c; margin:6px 0 10px; resize:vertical; box-sizing:border-box; }
+.sc-alink { display:block; text-align:center; text-decoration:none; box-sizing:border-box; }
+.sc-wa-note { font-size:12.5px; line-height:1.7; color:#7a6064; text-align:center; margin:0 0 10px; }
+.sc-wa-note b { color:#8e5b5c; }
+/* back to main menu */
+.sc-back { position:fixed; top:128px; inset-inline-start:14px; z-index:95; display:flex; align-items:center; gap:0; height:46px; padding:0 13px; border-radius:40px;
+  background:rgba(255,255,255,.95); backdrop-filter:blur(6px); color:#8e5b5c; text-decoration:none; border:1px solid #ecd0cb; box-shadow:0 8px 22px rgba(90,52,52,.2);
+  font:600 13.5px 'El Messiri','Poppins',sans-serif; overflow:hidden; transition:box-shadow .2s ease, background .2s ease; }
+.sc-back svg { flex:0 0 20px; }
+html[dir="ltr"] .sc-back svg { transform:scaleX(-1); }
+.sc-back span { max-width:0; opacity:0; white-space:nowrap; transition:max-width .3s ease, opacity .25s ease, margin .3s ease; }
+.sc-back:hover, .sc-back:focus-visible { box-shadow:0 12px 28px rgba(90,52,52,.28); background:#fff; }
+.sc-back:hover span, .sc-back:focus-visible span { max-width:160px; opacity:1; margin-inline-start:9px; }
+@media (max-width:640px) { .sc-back { top:116px; height:42px; padding:0 11px; } }
+
+/* order image step */
+.sc-stepbox { margin: 14px 0 12px; padding: 14px; border: 1.5px dashed #c9a27a; border-radius: 16px; background: #fffaf6; text-align: center; }
+.sc-stepbox b { color: #6b4344; font-size: 15px; }
+.sc-stepbox p { margin: 6px 0 10px; font-size: 13px; line-height: 1.8; color: #7a6064; }
+.sc-orderimg { width: 100%; max-height: 340px; object-fit: contain; border-radius: 12px; border: 1px solid #F0DCE1; background: #fff; }
+
+/* city / side / district selects */
+.sc-gate select, .sc-form select {
+  width: 100%; padding: 12px 38px 12px 14px; border: 1.5px solid #F0DCE1; border-radius: 12px; background-color: #fff;
+  font: 400 14.5px 'El Messiri','Poppins',sans-serif; color: #3A3A3A; -webkit-appearance: none; appearance: none;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='14' height='9' viewBox='0 0 14 9'><path d='M1 1l6 6 6-6' fill='none' stroke='%238e5b5c' stroke-width='2' stroke-linecap='round'/></svg>");
+  background-repeat: no-repeat; background-position: right 14px center;
+}
+[dir="rtl"] .sc-gate select, [dir="rtl"] .sc-form select { padding: 12px 14px 12px 38px; background-position: left 14px center; }
+.sc-gate select:focus, .sc-form select:focus { outline: none; border-color: #D4537E; }
+.sc-gate select:disabled { opacity: .55; background-color: #f6eeea; }
+.sc-gate select.err, .sc-form select.err { border-color: #d64545; }
+
+/* sold out */
+.sc-add-btn:disabled, .sc-add-btn.sc-disabled { background: #cdbfc2; box-shadow: none; cursor: not-allowed; transform: none; }
+.card.sc-sold .slider img { filter: grayscale(.55) opacity(.72); }
+.sc-sold-badge { position: absolute; top: 12px; inset-inline-start: 12px; z-index: 5; background: rgba(58,42,46,.88); color: #f6dcc0; font: 600 12.5px 'El Messiri','Poppins',sans-serif; padding: 5px 14px; border-radius: 20px; letter-spacing: .03em; }
+.card-media { position: relative; }
+.pcard { position: relative; }
+.pcard.sold img { filter: grayscale(.55) opacity(.72); }
+.sold-ribbon { position: absolute; top: 12px; inset-inline-start: 12px; z-index: 4; background: rgba(58,42,46,.88); color: #f6dcc0; font: 600 12.5px 'El Messiri','Poppins',sans-serif; padding: 5px 14px; border-radius: 20px; }
+
+/* color line + finish (glossy / matte) */
+.sc-colorline { display: flex; align-items: center; gap: 7px; margin-top: 6px; font: 500 13.5px 'El Messiri','Poppins',sans-serif; color: #7a6064; }
+.sc-colorline i, .pcolor i { width: 13px; height: 13px; border-radius: 50%; border: 1px solid rgba(0,0,0,.18); flex: 0 0 13px; display: inline-block; }
+.sc-colorline.big { font-size: 15px; margin: 8px 0 4px; }
+.pcolor { display: flex; align-items: center; gap: 7px; margin-top: 5px; font: 500 13px 'El Messiri','Poppins',sans-serif; color: #7a6064; }
+.sc-modal-color { margin-bottom: 4px; }
+.sc-fin-badge, .fin-badge { position: absolute; top: 12px; inset-inline-end: 12px; z-index: 5; padding: 6px 15px; border-radius: 20px; overflow: hidden;
+  font: 700 13px 'El Messiri','Poppins',sans-serif; letter-spacing: .03em; box-shadow: 0 6px 16px rgba(0,0,0,.22); }
+.sc-fin-badge.glossy, .fin-badge.glossy { background: linear-gradient(135deg,#fff1bd,#e6bd57 45%,#fff0b8 72%,#d1a238); color: #5a3b00; }
+.sc-fin-badge.glossy::after, .fin-badge.glossy::after { content: ""; position: absolute; top: 0; bottom: 0; width: 40%; inset-inline-start: -60%;
+  background: linear-gradient(100deg, transparent, rgba(255,255,255,.75), transparent); animation: scFinShine 2.8s ease-in-out infinite; }
+@keyframes scFinShine { 0%,50% { inset-inline-start: -60%; } 85%,100% { inset-inline-start: 130%; } }
+.sc-fin-badge.matte, .fin-badge.matte { background: rgba(58,42,46,.92); color: #f1e3dc; border: 1px solid rgba(255,255,255,.18); }
+.sc-fin-chip { display: inline-block; margin: 6px 0 2px; padding: 7px 14px; border-radius: 14px; font: 500 13px 'El Messiri','Poppins',sans-serif; }
+.sc-fin-chip.glossy { background: linear-gradient(135deg,#fff6d6,#f6dfa0); color: #5a3b00; border: 1px solid #e3c66f; }
+.sc-fin-chip.matte { background: #3a2a2e; color: #f1e3dc; }
+.sc-fin-chip b { font-weight: 700; }
+.pcard .pb { position: relative; }
+
+.sc-colorline.nodot i { display: none; }
+
+
+/* ===== لامع / مطفي: تأثير على الصورة نفسها بدل الشارة ===== */
+.sc-fin-badge, .fin-badge { display: none !important; }
+.pcard .pm { position: relative; overflow: hidden; }
+.sc-fin-frame { position: absolute; inset: 0; z-index: 8; pointer-events: none; }
+.sc-fin-frame.glossy { box-shadow: inset 0 0 0 3px #e6bd57, inset 0 0 34px rgba(255,214,110,.55); }
+.sc-fin-frame.matte { box-shadow: inset 0 0 0 3px #3a2a2e; background: radial-gradient(ellipse at center, transparent 52%, rgba(30,18,22,.26)); }
+.sc-fin-glint { position: absolute; top: -15%; bottom: -15%; width: 42%; left: -70%; z-index: 9; pointer-events: none;
+  background: linear-gradient(105deg, transparent, rgba(255,255,255,.8), transparent); transform: skewX(-18deg); animation: scGlint 3.2s ease-in-out infinite; }
+@keyframes scGlint { 0%, 52% { left: -70%; } 88%, 100% { left: 135%; } }
+.sc-spark { position: absolute; z-index: 10; pointer-events: none; color: #fff7d1; font-size: 20px; text-shadow: 0 0 8px #f2c94c, 0 0 14px #e6bd57; opacity: 0; animation: scTwinkle 2.6s ease-in-out infinite; }
+@keyframes scTwinkle { 0%, 100% { opacity: 0; transform: scale(.4) rotate(0); } 50% { opacity: 1; transform: scale(1.15) rotate(25deg); } }
+/* وسم اللمعة جنب اللون */
+.sc-fin-tag { margin-inline-start: auto; padding: 3px 12px; border-radius: 14px; font: 700 12px 'El Messiri','Poppins',sans-serif; position: relative; overflow: hidden; white-space: nowrap; }
+.sc-fin-tag.glossy { background: linear-gradient(135deg,#fff1bd,#e6bd57 50%,#fff0b8 75%,#d1a238); color: #5a3b00; }
+.sc-fin-tag.glossy::after { content: ""; position: absolute; top: 0; bottom: 0; width: 40%; inset-inline-start: -60%; background: linear-gradient(100deg, transparent, rgba(255,255,255,.8), transparent); animation: scFinShine 2.8s ease-in-out infinite; }
+.sc-fin-tag.matte { background: #3a2a2e; color: #f1e3dc; }
+.pcolor .sc-fin-tag { margin-inline-start: auto; }
+/* مبدّل لامع / مطفي داخل نافذة المنتج */
+.sc-fin-switch { display: flex; gap: 0; margin: 10px 0 4px; border: 1.5px solid #e3c66f; border-radius: 16px; overflow: hidden; background: #fff; }
+.sc-fin-switch button { flex: 1; padding: 12px 8px; border: none; background: transparent; cursor: pointer; font: 700 14.5px 'El Messiri','Poppins',sans-serif; color: #7a6064; transition: all .25s; position: relative; overflow: hidden; }
+.sc-fin-switch button.glossy.on { background: linear-gradient(135deg,#fff1bd,#e6bd57 50%,#fff0b8 75%,#d1a238); color: #5a3b00; box-shadow: inset 0 0 14px rgba(255,255,255,.6); }
+.sc-fin-switch button.glossy.on::after { content: ""; position: absolute; top: 0; bottom: 0; width: 35%; inset-inline-start: -60%; background: linear-gradient(100deg, transparent, rgba(255,255,255,.85), transparent); animation: scFinShine 2.6s ease-in-out infinite; }
+.sc-fin-switch button.matte.on { background: #3a2a2e; color: #f1e3dc; }
+.sc-fin-switch button:not(.on):not(.na):hover { background: #fbf3ea; }
+.sc-fin-switch button.na { opacity: .45; cursor: not-allowed; }
+.sc-fin-desc { font: 400 13px/1.7 'El Messiri','Poppins',sans-serif; color: #8a6e72; margin: 4px 2px 2px; }
+
